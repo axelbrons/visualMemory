@@ -11,6 +11,7 @@ int main() {
     assert(al_install_mouse());
     assert(al_install_keyboard());
     srand(time(NULL));
+    assert(al_init_ttf_addon());
 
     /// Bitmap
     ALLEGRO_BITMAP *icon;
@@ -24,6 +25,10 @@ int main() {
     al_set_window_title(display,"Visual Memory");
     al_set_window_position(display,0,0);
     //al_set_display_icon(display,icon);
+
+    /// Fonts
+    ALLEGRO_FONT *font = NULL;
+    font = al_load_font("../fonts/RobotoMono-Regular.ttf",40,ALLEGRO_ALIGN_CENTER);
 
     /// Timer
     ALLEGRO_TIMER *timer;
@@ -42,6 +47,9 @@ int main() {
 
     /// Declaration
     int end=0;
+    int temps = 0;
+    bool victory = 1;
+    int score = 0;
     ELEMENT elements[NB_ELEMENTS][NB_ELEMENTS]={0};
 
     /// Initialisation
@@ -63,12 +71,34 @@ int main() {
                 }
                 break;
             case ALLEGRO_EVENT_MOUSE_BUTTON_DOWN :
-                initElements(elements);
-                randomElements(elements,NB_ACTIF);
+
+                checkGoodSquare(elements,event);
+
                 break;
             case ALLEGRO_EVENT_TIMER :
-                gridCheckActivation(elements);
+                //al_clear_to_color(DARK_GREY);
+                drawGrid(elements);
                 al_flip_display();
+                al_draw_textf(font,LIGHT_GREY,700,600,ALLEGRO_ALIGN_CENTER,"%d",score);
+
+                if (victory == 1) {
+                    //al_clear_to_color(DARK_GREY);
+                    initElements(elements);
+                    randomElements(elements,NB_ACTIF);
+                    activationElementsVisible(elements);
+                    drawGrid(elements);
+                    al_flip_display();
+                    al_rest(3.0);
+                    hideElements(elements);
+                    victory = 0;
+                }
+                if (!victory) {
+                    victory = checkVictory(elements,&score);
+                }
+
+
+
+                temps++;
                 break;
         }
     }
@@ -80,6 +110,7 @@ int main() {
     al_destroy_timer(timer);
     al_destroy_event_queue(queue);
     al_destroy_display(display);
+    al_destroy_font(font);
 
     return 0;
 }

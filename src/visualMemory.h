@@ -20,7 +20,6 @@
 #define SPACING 8
 
 /// Color
-#define BLANC al_map_rgb(255,255,255)
 #define DARK_GREY al_map_rgb(38, 42, 51)
 #define GREEN al_map_rgb(67, 255, 175)
 #define LIGHT_GREY al_map_rgb(82, 103, 119)
@@ -33,11 +32,16 @@
 typedef struct {
     int x,y;
     int actif;
+    int visible;
 }ELEMENT;
 
 /// Function
-void gridCheckActivation(ELEMENT rect[NB_ELEMENTS][NB_ELEMENTS]);
+void drawGrid(ELEMENT rect[NB_ELEMENTS][NB_ELEMENTS]);
 void initElements(ELEMENT ele[NB_ELEMENTS][NB_ELEMENTS]);
 void randomElements(ELEMENT elements[NB_ELEMENTS][NB_ELEMENTS],int number);
+void activationElementsVisible(ELEMENT elements[NB_ELEMENTS][NB_ELEMENTS]);
+void hideElements(ELEMENT elements[NB_ELEMENTS][NB_ELEMENTS]);
+bool checkVictory(ELEMENT elements[NB_ELEMENTS][NB_ELEMENTS],int *score);
+void checkGoodSquare(ELEMENT elements[NB_ELEMENTS][NB_ELEMENTS],ALLEGRO_EVENT event);
 
 #endif //VISUALMEMORY_VISUALMEMORY_H
